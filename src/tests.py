@@ -67,13 +67,13 @@ def test_gauss_iter_solve():
     jacobi_2_pass = "Jacobi passed(Inverse of A2)"
     jacobi_2_fail = "Jacobi failed(Inverse of A2)"
 
-    # Iterate through the elements for Test 2
+    
     for i in range(len(solution_2_seidel)):
         difference_2_seidel = abs(solution_2_seidel[i] - expected_solution_2[i])
         difference_2_jacobi = abs(solution_2_jacobi[i] - expected_solution_2[i])
 
         # Check Seidel result
-        for i in range(len(solution_2_seidel)):
+        for i in range(len(difference_2_seidel)):
             if difference_2_seidel[i] < tol:
                 result_2_seidel = seidel_2_pass
             else:
@@ -85,7 +85,7 @@ def test_gauss_iter_solve():
             else:
                 result_2_jacobi = jacobi_2_fail
 
-    # Final check after the loop for Test 2
+
     if result_2_seidel == seidel_2_pass and result_2_jacobi == jacobi_2_pass:
         final_2 = "Test 2 passed (Inverse of A2)"
     else:

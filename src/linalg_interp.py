@@ -1,6 +1,6 @@
 import numpy as np
 
-def gauss_iter_solve(A, b, x0=None, tol=1e-8, alg='seidel', max_iter=1000):
+def gauss_iter_solve(A, b, x0=None, tol=1e-8, alg='seidel', max_iter=100):
     """
     Solve a linear system Ax = b using iterative methods (Gauss-Seidel or Jacobi).
 
@@ -106,6 +106,6 @@ def spline_function(xd, yd, order=3):
     if order not in (1, 2, 3):
         raise ValueError("Order must be 1, 2, or 3.")
 
-    
+
 
 

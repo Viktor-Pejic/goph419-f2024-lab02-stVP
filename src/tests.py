@@ -67,7 +67,7 @@ def test_gauss_iter_solve():
     jacobi_2_pass = "Jacobi passed(Inverse of A2)"
     jacobi_2_fail = "Jacobi failed(Inverse of A2)"
 
-    
+
     for i in range(len(solution_2_seidel)):
         difference_2_seidel = abs(solution_2_seidel[i] - expected_solution_2[i])
         difference_2_jacobi = abs(solution_2_jacobi[i] - expected_solution_2[i])

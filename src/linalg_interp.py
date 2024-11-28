@@ -63,6 +63,9 @@ def gauss_iter_solve(A, b, x0=None, tol=1e-8, alg='seidel', max_iter=100):
     raise RuntimeWarning(f"Solution did not converge within {max_iter} iterations.")
 
 
+import numpy as np
+import matplotlib.pyplot as plt
+
 def spline_function(xd, yd, order=3):
     '''
     Generates a spline function given two vectors x and y of data.
@@ -73,9 +76,7 @@ def spline_function(xd, yd, order=3):
     ------
     return
     ------
-
-    Returned value is a function that takes one parameter
-    (a float or array_like of float) and returns the interpolated y value(s)
+    A function that takes one parameter (a float or array_like of float) and returns the interpolated y value(s)
 
     ------
     Raises
@@ -86,25 +87,70 @@ def spline_function(xd, yd, order=3):
                 Order is a value other than 1, 2, or 3.
     '''
 
+    # Ensure xd and yd are numpy arrays
     xd = np.array(xd, dtype=float)
     yd = np.array(yd, dtype=float)
 
+    # Check that the input vectors have the same length
     rows_x = len(xd)
     rows_y = len(yd)
 
     if rows_x != rows_y:
         raise ValueError("Dimension mismatch between xd and yd.")
 
+    # Check that there are no repeated x values
     k = len(np.unique(xd))
     if k != rows_x:
         raise ValueError("Repeating values in xd.")
 
-    for i in range(rows_x):
-        if not (xd[i] <= xd[i + 1]):
-            raise ValueError("xd values must be strictly increasing.")
+    # Ensure xd is strictly increasing
+    if np.any(np.diff(xd) <= 0):
+        raise ValueError("xd values must be strictly increasing.")
 
+    # Check that the order is valid (1, 2, or 3)
     if order not in (1, 2, 3):
         raise ValueError("Order must be 1, 2, or 3.")
+
+    n = rows_x
+
+    if order == 1:
+        # Linear spline implementation
+        def linear_spline(x):
+            x = np.array(x, dtype=float)
+            if np.any(x < xd[0]) or np.any(x > xd[-1]):
+                raise ValueError(f"Input value(s) out of bounds: [{xd[0]}, {xd[-1]}].")
+
+            # Locate intervals for x
+            i = np.searchsorted(xd, x) - 1
+            i = np.clip(i, 0, n - 2)  # Ensure indices are within range
+
+            dx = x - xd[i]
+            slope = (yd[i + 1] - yd[i]) / (xd[i + 1] - xd[i])  # Linear slope
+
+            y = yd[i] + slope * dx
+            return y
+
+        return linear_spline
+
+
+
+if __name__ == "__main__":
+    xd = [0, 1, 2, 3, 4]
+    yd = [0, 1, 0, -1, 0]
+
+    # Create the spline function (linear spline in this case)
+    spline_fn = spline_function(xd, yd, order=1)
+
+    # Evaluate the spline at several points
+    x = np.linspace(0, 4, 100)
+    y = spline_fn(x)  # This will evaluate the spline at the given x_test points
+
+    # Plot the results
+    plt.scatter(xd, yd, color='red', label='Data Points')
+    plt.plot(x, y, label='Linear Spline', color='blue')
+    plt.legend()
+    plt.show()
+
 
 
 

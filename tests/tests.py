@@ -97,3 +97,16 @@ def test_gauss_iter_solve():
 # Run the tests
 if __name__ == "__main__":
     test_gauss_iter_solve()
+
+def test_spline_function():
+    spline_function()
+    if order == 1:
+        linear_spline(x)
+
+    if order == 2:
+        quadratic_spline(x)
+
+    if order == 3:
+        cubic_spline(x)
+
+

@@ -61,3 +61,51 @@ def gauss_iter_solve(A, b, x0=None, tol=1e-8, alg='seidel', max_iter=1000):
 
     # If max_iter reached without convergence
     raise RuntimeWarning(f"Solution did not converge within {max_iter} iterations.")
+
+
+def spline_function(xd, yd, order=3):
+    '''
+    Generates a spline function given two vectors x and y of data.
+    xd: An array_like of float data increasing in value
+    yd: An array_like of float data with the same shape as xd
+    order: (optional) int with possible values 1, 2, or 3 (default=3)
+
+    ------
+    return
+    ------
+
+    Returned value is a function that takes one parameter
+    (a float or array_like of float) and returns the interpolated y value(s)
+
+    ------
+    Raises
+    ------
+    ValueError: If input dimensions are incompatible or invalid order value.
+                There are repeated values in xd.
+                The xd values are not in increasing order.
+                Order is a value other than 1, 2, or 3.
+    '''
+
+    xd = np.array(xd, dtype=float)
+    yd = np.array(yd, dtype=float)
+
+    rows_x = len(xd)
+    rows_y = len(yd)
+
+    if rows_x != rows_y:
+        raise ValueError("Dimension mismatch between xd and yd.")
+
+    k = len(np.unique(xd))
+    if k != rows_x:
+        raise ValueError("Repeating values in xd.")
+
+    for i in range(rows_x):
+        if not (xd[i] <= xd[i + 1]):
+            raise ValueError("xd values must be strictly increasing.")
+
+    if order not in (1, 2, 3):
+        raise ValueError("Order must be 1, 2, or 3.")
+
+    
+
+

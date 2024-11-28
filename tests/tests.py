@@ -1,5 +1,5 @@
 import numpy as np
-from linalg_interp import gauss_iter_solve
+from src.linalg_interp import gauss_iter_solve
 
 
 def test_gauss_iter_solve():

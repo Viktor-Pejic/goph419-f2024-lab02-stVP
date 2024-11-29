@@ -1,5 +1,7 @@
 import numpy as np
+import matplotlib.pyplot as plt
 from src.linalg_interp import gauss_iter_solve
+from src.linalg_interp import spline_function
 
 
 def test_gauss_iter_solve():
@@ -97,8 +99,4 @@ def test_gauss_iter_solve():
 # Run the tests
 if __name__ == "__main__":
     test_gauss_iter_solve()
-
-def test_spline_function():
-
-
 

@@ -140,7 +140,7 @@ def spline_function(xd, yd, order=3):
 
     elif order == 2:
         def quadratic_spline(x):
-            # Ensure x is a numpy array for consistent behavior
+
             x = np.array(x, dtype=float)
 
             # Check if any x values are out of bounds
@@ -154,10 +154,10 @@ def spline_function(xd, yd, order=3):
             delta_y = np.diff(yd)
             newton_dif_1 = delta_y / delta_x
 
-            # Initialize square matrix for Ac = rhs (size is (n-1) x (n-1))
+            # Initialize square matrix for Ac = rhs
             A = np.zeros((n - 1, n - 1))
 
-            # Fill the first row for boundary conditions (natural spline)
+            
             for i in range(n - 1):
                 if i == 0:
                     A[i, i] = 1
@@ -207,8 +207,8 @@ def spline_function(xd, yd, order=3):
 
             # Coefficient matrix
             A = np.zeros((n + 1, n + 1))
-            A[0, 0], A[0, 1] = 1, 0  # Natural spline first boundary
-            A[-1, -2], A[-1, -1] = 0, 1  # Natural spline second boundary
+            A[0, 0], A[0, 1] = 1, 0
+            A[-1, -2], A[-1, -1] = 0, 1
 
             for i in range(1, n):
                 A[i, i - 1] = delta_x[i - 1]

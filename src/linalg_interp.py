@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 def gauss_iter_solve(A, b, x0=None, tol=1e-8, alg='seidel', max_iter=100):
     """
@@ -63,8 +64,8 @@ def gauss_iter_solve(A, b, x0=None, tol=1e-8, alg='seidel', max_iter=100):
     raise RuntimeWarning(f"Solution did not converge within {max_iter} iterations.")
 
 
-import numpy as np
-import matplotlib.pyplot as plt
+
+
 
 def spline_function(xd, yd, order=3):
     '''
@@ -113,43 +114,132 @@ def spline_function(xd, yd, order=3):
 
     n = rows_x
 
+
+
+    delta_x = np.diff(xd)
+    delta_y = np.diff(yd)
+    div_dif_1 = delta_y / delta_x
+
     if order == 1:
         # Linear spline implementation
         def linear_spline(x):
+            # Locate intervals for x
             x = np.array(x, dtype=float)
             if np.any(x < xd[0]) or np.any(x > xd[-1]):
                 raise ValueError(f"Input value(s) out of bounds: [{xd[0]}, {xd[-1]}].")
 
-            # Locate intervals for x
             i = np.searchsorted(xd, x) - 1
             i = np.clip(i, 0, n - 2)  # Ensure indices are within range
 
             dx = x - xd[i]
-            slope = (yd[i + 1] - yd[i]) / (xd[i + 1] - xd[i])  # Linear slope
+            rhs = (yd[i + 1] - yd[i]) / (xd[i + 1] - xd[i])  # Linear slope
 
-            y = yd[i] + slope * dx
+            y = yd[i] + rhs * dx
             return y
-
         return linear_spline
 
+    elif order == 2:
+        def quadratic_spline(x):
+            # Ensure x is a numpy array for consistent behavior
+            x = np.array(x, dtype=float)
+
+            # Check if any x values are out of bounds
+            if np.any(x < xd[0]) or np.any(x > xd[-1]):
+                raise ValueError(f"Input value(s) out of bounds: [{xd[0]}, {xd[-1]}].")
+
+            n = len(xd)
+
+            # Compute first divided differences
+            delta_x = np.diff(xd)
+            delta_y = np.diff(yd)
+            newton_dif_1 = delta_y / delta_x
+
+            # Initialize square matrix for Ac = rhs (size is (n-1) x (n-1))
+            A = np.zeros((n - 1, n - 1))
+
+            # Fill the first row for boundary conditions (natural spline)
+            for i in range(n - 1):
+                if i == 0:
+                    A[i, i] = 1
+                    A[i, i + 1] = -1
+                elif i == n - 2:
+                    A[i, i - 1] = delta_x[i - 1]
+                    A[i, i] = 2 * delta_x[i]
+                else:
+                    A[i, i - 1] = delta_x[i - 1]
+                    A[i, i] = 2 * (delta_x[i - 1] + delta_x[i])
+                    A[i, i + 1] = delta_x[i]
+
+            # Right-hand side (rhs)
+            rhs = np.zeros(n - 1)
+            rhs[1:] = np.diff(newton_dif_1, axis=0)  # Assign the second divided differences to rhs
+
+            # Solve for c coefficients
+            c = np.linalg.solve(A, rhs)
+
+            # Compute b coefficients
+            b = newton_dif_1 - (c * delta_x)
+            a = yd
+
+            # Interpolate y values for input x
+            y = np.zeros_like(x, dtype=float)
+            for k in range(len(x)):
+                i = np.searchsorted(xd, x[k]) - 1
+                i = np.clip(i, 0, n - 2)
+
+                dx = x[k] - xd[i]
+                y[k] = a[i] + b[i] * dx + c[i] * (dx ** 2)
+
+            return y
+
+        return quadratic_spline
+
+    elif order == 3:
+        def cubic_spline(x):
+            x = np.array(x, dtype=float)
+            if np.any(x < xd[0]) or np.any(x > xd[-1]):
+                raise ValueError(f"Input value(s) out of bounds: [{xd[0]}, {xd[-1]}].")
+            n = len(xd) - 1
+            div_dif_2 = np.diff(div_dif_1)
+
+            rhs = np.zeros(n + 1)
+            rhs[1:-1] = 3 * div_dif_2
+
+            # Coefficient matrix
+            A = np.zeros((n + 1, n + 1))
+            A[0, 0], A[0, 1] = 1, 0  # Natural spline first boundary
+            A[-1, -2], A[-1, -1] = 0, 1  # Natural spline second boundary
+
+            for i in range(1, n):
+                A[i, i - 1] = delta_x[i - 1]
+                A[i, i] = 2 * (delta_x[i - 1] + delta_x[i])
+                A[i, i + 1] = delta_x[i]
+
+            c = np.linalg.solve(A, rhs)
+
+            d = np.diff(c) / (3 * delta_x)
+            b = div_dif_1 - delta_x * (c[1:] + 2 * c[:-1]) / 3
+            a = yd[:-1]
+
+            # Evaluate spline
+            i = np.searchsorted(xd, x) - 1
+            i = np.clip(i, 0, n - 1)
+            dx = x - xd[i]
+
+            y = a[i] + b[i] * dx + c[i] * dx ** 2 + d[i] * dx ** 3
+            return y
+        return cubic_spline
 
 
-if __name__ == "__main__":
-    xd = [0, 1, 2, 3, 4]
-    yd = [0, 1, 0, -1, 0]
 
-    # Create the spline function (linear spline in this case)
-    spline_fn = spline_function(xd, yd, order=1)
 
-    # Evaluate the spline at several points
-    x = np.linspace(0, 4, 100)
-    y = spline_fn(x)  # This will evaluate the spline at the given x_test points
 
-    # Plot the results
-    plt.scatter(xd, yd, color='red', label='Data Points')
-    plt.plot(x, y, label='Linear Spline', color='blue')
-    plt.legend()
-    plt.show()
+
+
+
+
+
+
 
 
 

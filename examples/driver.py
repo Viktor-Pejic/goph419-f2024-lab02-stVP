@@ -27,13 +27,13 @@ def main():
     plt.subplots_adjust(hspace=0.3, wspace=0.5)
     plt.suptitle("Air Density vs Temperature and Water Density vs Temperature", fontsize=15, fontweight='bold')
 
-    axs[0,0].plot(x_plot_air, f_linear_air, 'b--', label='Linear air density vs temp')
+    axs[0,0].plot(x_plot_air, f_linear_air, 'b', label='Linear air density vs temp')
     axs[0,0].scatter(x_values_air, y_values_air, color='red', label='Data points')
     axs[0,0].set_title('Linear', fontweight='bold')
     axs[0,0].set_xlabel('Temperature (C)')
     axs[0,0].set_ylabel('Air Density (kg/m^3)')
 
-    axs[0,1].plot(x_plot_water, f_linear_water, 'g--', label='Linear water density vs temp')
+    axs[0,1].plot(x_plot_water, f_linear_water, 'g', label='Linear water density vs temp')
     axs[0,1].scatter(x_values_water, y_values_water, color='red', label='Data points')
     axs[0,1].set_title('Linear', fontweight='bold')
     axs[0,1].set_xlabel('Temperature (C)')
@@ -45,13 +45,13 @@ def main():
     quadratic_water = spline_function(x_values_water, y_values_water, order=2)
     f_quad_water = quadratic_water(x_plot_water)
 
-    axs[1,0].plot(x_plot_air, f_quad_air,  'b--', label='Quadratic air density vs temp')
+    axs[1,0].plot(x_plot_air, f_quad_air,  'b', label='Quadratic air density vs temp')
     axs[1,0].scatter(x_values_air, y_values_air, color='red', label='Data points')
     axs[1,0].set_title('Quadratic', fontweight='bold')
     axs[1,0].set_xlabel('Temperature (C)')
     axs[1,0].set_ylabel('Air Density (kg/m^3)')
 
-    axs[1,1].plot(x_plot_water, f_quad_water,  'g--', label='Quadratic water density vs temp')
+    axs[1,1].plot(x_plot_water, f_quad_water,  'g', label='Quadratic water density vs temp')
     axs[1,1].scatter(x_values_water, y_values_water, color='red', label='Data points')
     axs[1,1].set_title('Quadratic', fontweight='bold')
     axs[1,1].set_xlabel('Temperature (C)')
@@ -63,18 +63,19 @@ def main():
     cubic_water = spline_function(x_values_water, y_values_water, order=3)
     f_cubic_water = cubic_water(x_plot_water)
 
-    axs[2,0].plot(x_plot_air, f_cubic_air,  'b--', label='Cubic air density vs temp')
+    axs[2,0].plot(x_plot_air, f_cubic_air,  'b', label='Cubic air density vs temp')
     axs[2,0].scatter(x_values_air, y_values_air, color='red', label='Data points')
     axs[2,0].set_title('Cubic', fontweight='bold')
     axs[2,0].set_xlabel('Temperature (C)')
     axs[2,0].set_ylabel('Air Density (kg/m^3)')
 
-    axs[2,1].plot(x_plot_water, f_cubic_water,  'g--', label='Cubic water density vs temp')
+    axs[2,1].plot(x_plot_water, f_cubic_water,  'g', label='Cubic water density vs temp')
     axs[2,1].scatter(x_values_water, y_values_water, color='red', label='Data points')
     axs[2,1].set_title('Cubic', fontweight='bold')
     axs[2,1].set_xlabel('Temperature (C)')
     axs[2,1].set_ylabel('Water Density (kg/m^3)')
-    #plt.savefig('C:/Users/Viktor/repos/goph419-f2024-lab02-stVP/figures/Air_Density_and_Water_Density_vs_Temperature.png')
+
+    plt.savefig('C:/Users/Viktor/repos/goph419-f2024-lab02-stVP/figures/Air_Density_and_Water_Density_vs_Temperature.png')
 
 if __name__ == '__main__':
     main()

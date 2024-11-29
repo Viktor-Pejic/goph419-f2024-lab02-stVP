@@ -74,7 +74,7 @@ def main():
     axs[2,1].set_title('Cubic', fontweight='bold')
     axs[2,1].set_xlabel('Temperature (C)')
     axs[2,1].set_ylabel('Water Density (kg/m^3)')
-    plt.savefig('C:/Users/Viktor/repos/goph419-f2024-lab02-stVP/figures/Air_Density_and_Water_Density_vs_Temperature.png')
+    #plt.savefig('C:/Users/Viktor/repos/goph419-f2024-lab02-stVP/figures/Air_Density_and_Water_Density_vs_Temperature.png')
 
 if __name__ == '__main__':
     main()

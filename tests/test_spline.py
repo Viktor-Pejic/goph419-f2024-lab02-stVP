@@ -40,7 +40,7 @@ if __name__ == '__main__':
     axs[2].title.set_text('Cubic Spline ($x^3 - x^2 + 3x + 2$)')
     axs[2].legend()
 
-    plt.savefig('C:/Users/Viktor/repos/goph419-f2024-lab02-stVP/figures/Spline_Visualization.png')
+    #plt.savefig('C:/Users/Viktor/repos/goph419-f2024-lab02-stVP/figures/Spline_Visualization.png')
 
 if __name__ == '__main__':
     #Test 2: Compare against scipy.interpolate.UnivariateSpline using exponential function
@@ -51,7 +51,7 @@ if __name__ == '__main__':
     f_cubic_exp = spline_function(xd_2, y_exp, order=3)
     cubic_exp_values = f_cubic_exp(x_2)
 
-    f_cubic_scipy_values = UnivariateSpline(xd_2, y_exp, k=3, ext='raise')
+    f_cubic_scipy_values = UnivariateSpline(xd_2, y_exp, k=3, ext='raise', s=0)
     f_cubic_scipy = f_cubic_scipy_values(x_2)
 
     fig, axs = plt.subplots(1, 2, figsize=(10, 5))
@@ -66,5 +66,5 @@ if __name__ == '__main__':
     axs[1].scatter(xd_2, y_exp, color='red', label="Data Points")
     axs[1].title.set_text('Scipy Generated Cubic Spline')
     axs[1].legend()
-
+   
     #plt.savefig('C:/Users/Viktor/repos/goph419-f2024-lab02-stVP/figures/Scipy_Spline_Comparison.png')
